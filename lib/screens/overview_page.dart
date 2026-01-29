@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guild_companion/models/character.dart';
+import 'package:guild_companion/screens/home_page.dart';
+import 'package:guild_companion/screens/settings_page.dart';
 import 'package:guild_companion/theme.dart';
 import 'bestiary_page.dart';
 import 'character_sheet_page.dart';
@@ -29,42 +31,20 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: PopupMenuButton<Character>(
-          tooltip: 'Seleziona personaggio',
-          icon: const Icon(Icons.account_circle_outlined),
-          onSelected: (value) {
-            setState(() => _selectedCharacter = value);
-          },
-          itemBuilder: (context) => widget.characters
-              .map(
-                (character) => PopupMenuItem<Character>(
-                  value: character,
-                  child: Row(
-                    children: [
-                      Icon(
-                        character == _selectedCharacter
-                            ? Icons.check_circle
-                            : Icons.circle_outlined,
-                        size: 18,
-                        color: character == _selectedCharacter
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).iconTheme.color,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(character.name),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => HomePage())),
         ),
         title: Text(_selectedCharacter.name),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-            },
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
           ),
         ],
       ),
@@ -90,7 +70,9 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
               icon: Icons.backpack,
               backgroundColor: AppColors.error,
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const InventoryPage()),
+                MaterialPageRoute(
+                  builder: (_) => InventoryPage(character: _selectedCharacter),
+                ),
               ),
             ),
             _featureCard(
@@ -98,31 +80,32 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
               title: 'Bestiario',
               icon: Icons.pets,
               backgroundColor: AppColors.primary,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const BestiaryPage()),
-              ),
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const BestiaryPage())),
             ),
             _featureCard(
               context,
               title: 'Mercato',
               icon: Icons.storefront,
               backgroundColor: AppColors.tertiary,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const MarketPage()),
-              ),
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const MarketPage())),
             ),
             _featureCard(
               context,
               title: 'Giornale',
               icon: Icons.book,
               backgroundColor: AppColors.accent,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const JournalPage()),
-              ),
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const JournalPage())),
             ),
           ],
         ),
-      ),);
+      ),
+    );
   }
 
   Widget _featureCard(
@@ -148,10 +131,9 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
               const SizedBox(height: 12),
               Text(
                 title,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: AppColors.onPrimary),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: AppColors.onPrimary),
                 textAlign: TextAlign.center,
               ),
             ],
