@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guild_companion/models/character.dart';
 import 'package:guild_companion/theme.dart';
 import 'bestiary_page.dart';
 import 'character_sheet_page.dart';
@@ -8,37 +9,35 @@ import 'journal_page.dart';
 import 'inventory_page.dart';
 
 class OverviewPage extends ConsumerStatefulWidget {
-  const OverviewPage({super.key});
+  const OverviewPage({
+    super.key,
+    required this.characters,
+    required this.selectedCharacter,
+  });
+
+  final List<Character> characters;
+  final Character selectedCharacter;
 
   @override
   ConsumerState<OverviewPage> createState() => _OverviewPageState();
 }
 
 class _OverviewPageState extends ConsumerState<OverviewPage> {
-  final List<String> _characters = const [
-    'Erminio Brass',
-    'Nino Dangerous',
-    'Bebe Vio',
-    'Violetta Domestica',
-    'G.G. Proietti',
-    'Dio Bardo',
-  ];
-
-  late String _selectedCharacter = _characters.first;
+  late Character _selectedCharacter = widget.selectedCharacter;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: PopupMenuButton<String>(
+        leading: PopupMenuButton<Character>(
           tooltip: 'Seleziona personaggio',
           icon: const Icon(Icons.account_circle_outlined),
           onSelected: (value) {
             setState(() => _selectedCharacter = value);
           },
-          itemBuilder: (context) => _characters
+          itemBuilder: (context) => widget.characters
               .map(
-                (character) => PopupMenuItem<String>(
+                (character) => PopupMenuItem<Character>(
                   value: character,
                   child: Row(
                     children: [
@@ -52,14 +51,14 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
                             : Theme.of(context).iconTheme.color,
                       ),
                       const SizedBox(width: 8),
-                      Text(character),
+                      Text(character.name),
                     ],
                   ),
                 ),
               )
               .toList(),
         ),
-        title: Text(_selectedCharacter),
+        title: Text(_selectedCharacter.name),
         centerTitle: true,
         actions: [
           IconButton(
@@ -123,8 +122,7 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
             ),
           ],
         ),
-      ),
-    );
+      ),);
   }
 
   Widget _featureCard(

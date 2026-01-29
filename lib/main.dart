@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:guild_companion/screens/overview_page.dart';
+import 'package:guild_companion/screens/home_page.dart';
 import 'package:guild_companion/theme.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Guild Companion',
       theme: AppTheme.light(),
-      home: const OverviewPage(),
+      home: const HomePage(),
     );
   }
 }
